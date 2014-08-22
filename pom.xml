@@ -1,0 +1,456 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+	<!-- Ejemplo NO funcional -->
+    <groupId>ar.org.example</groupId>
+    <artifactId>TurnosImpl</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>TurnosImpl</name>
+    <url>http://maven.apache.org</url>
+    <description>Implementación de servicios de turnos</description>
+
+
+    <!-- Enforce Organization wide policies -->
+    <parent>
+        <groupId>ar.org.example</groupId>
+        <artifactId>Base</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <!-- Repositorio svn del proyecto -->
+    <scm>
+        <connection>scm:svn:http://svn.myrepo.net/Turnos_ServImpl/trunk/</connection>
+        <developerConnection>scm:svn:http://svn.myrepo.net/Turnos_ServImpl/trunk/</developerConnection>
+        <url>http://svn.myrepo.net/Turnos_ServImpl/trunk/</url>
+    </scm>
+    
+    <properties>
+        <hibernate-jpa-api.version>1.0.1.Final</hibernate-jpa-api.version>
+        <logback.version>1.0.13</logback.version>
+        <greenmail.version>1.3</greenmail.version>
+        <javax-mail.version>1.4.7</javax-mail.version>
+        <maven-site-plugin.version>3.2</maven-site-plugin.version>
+        <maven.project.info.reports.plugin>2.6</maven.project.info.reports.plugin>
+        <maven.javadoc.plugin>2.8.1</maven.javadoc.plugin>
+        <maven.surefire.report.plugin>2.13</maven.surefire.report.plugin>
+        <maven.jacoco.plugin>0.6.4.201312101107</maven.jacoco.plugin>
+        <maven.checkstyle.plugin>2.10</maven.checkstyle.plugin>
+        <maven.jxr.plugin>2.3</maven.jxr.plugin>
+        <maven.pmd.plugin>3.0.1</maven.pmd.plugin>
+        <maven.taglist.plugin>2.4</maven.taglist.plugin>
+        <maven.findbugs.plugin>2.5.2</maven.findbugs.plugin>
+        <maven.versions.plugin>2.0</maven.versions.plugin>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
+    <!-- Repositorio maven activo por defecto -->
+
+    <!-- Repositorios para release heredada del POM Base -->
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>ar.org.example</groupId>
+                <artifactId>Spring</artifactId>
+                <version>1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>  
+            <dependency>
+                <groupId>ar.org.example</groupId>
+                <artifactId>SpringRoo</artifactId>
+                <version>1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>  
+            <dependency>
+                <groupId>ar.org.example</groupId>
+                <artifactId>SpringTest</artifactId>
+                <version>1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency> 
+            <dependency>
+                <groupId>ar.org.example</groupId>
+                <artifactId>JPAHibernate</artifactId>
+                <version>1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>    
+        </dependencies>
+    </dependencyManagement>
+      
+    <dependencies>
+        
+        <dependency>
+            <groupId>ar.org.example</groupId>
+            <artifactId>Spring</artifactId>
+            <version>1.0</version>
+            <type>pom</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>ar.org.example</groupId>
+            <artifactId>SpringRoo</artifactId>
+            <version>1.0</version>
+            <type>pom</type>
+        </dependency>
+ 
+        <dependency>
+            <groupId>ar.org.example</groupId>
+            <artifactId>Turnos</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>ar.org.hiba.dis</groupId>
+            <artifactId>MfTurnosCliente</artifactId>
+            <version>1.0</version>
+        </dependency>
+ 
+        <dependency>
+            <groupId>ar.org.hiba.dis</groupId>
+            <artifactId>Util</artifactId>
+            <version>1.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>3.2.3.RELEASE</version>
+        </dependency>
+               
+        <!-- API de persistencia de Java -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>${hibernate-jpa-api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        
+        <!-- API de validación de Java -->
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+            <scope>provided</scope>
+        </dependency>
+                  
+        <!-- Dependencias de test -->   
+        <dependency>
+            <groupId>ar.org.example</groupId>
+            <artifactId>SpringTest</artifactId>
+            <version>1.0</version>
+            <type>pom</type>
+            <scope>test</scope>
+        </dependency>
+        
+		<!-- Mock servidor de mail -->
+        <dependency>
+            <groupId>com.icegreen</groupId>
+            <artifactId>greenmail</artifactId>
+            <version>${greenmail.version}</version>
+            <scope>test</scope>
+        </dependency>
+              
+        <!-- Binding de SLF4J. Con alcance 'test' para que no sea transitivo -->
+        <dependency>                                  
+            <groupId>ch.qos.logback</groupId>         
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>  
+            <scope>test</scope>     
+        </dependency>
+
+        <!-- Spring Data lo necesita, Roo no lo usa -->  
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-core</artifactId>
+            <version>3.1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+         
+        <!-- Spring Data lo necesita, Roo no lo usa -->     
+        <dependency>
+            <groupId>com.mysema.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <version>3.1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+ 
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${javax-mail.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+ 
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <!-- Netbeans lo necesita acá, no lo sabe deducir del POM efectivo -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <!-- Generación del cliente JAX-WS a partir de la wsdl-->
+            <plugin>
+                <groupId>org.jvnet.jax-ws-commons</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <packageName>ar.org.hiba.discomun.ws.webservicemfturnos.client</packageName>
+                    <wsdlDirectory>${basedir}/src/main/resources/META-INF/wsdl</wsdlDirectory>
+                    <wsdlLocation>http://turnos/wsdl/WebServiceTurnos.wsdl</wsdlLocation>
+                </configuration>
+            </plugin>
+            
+            <!-- Ejemplo para excluir tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.13</version>
+                <configuration>
+                    <excludes>                                   
+                        <!-- 
+                        <exclude>**/MedicoServiceTest.java</exclude>    
+                        <exclude>**/TurnoPacienteDaoTest.java</exclude>  
+                        <exclude>**/EpisodioDaoTest.java</exclude>
+                        <exclude>**/WsdlHelperTest.java</exclude>
+                        <exclude>**/ConfiguracionTest.java</exclude>
+                        <exclude>**/PropiedadAplicacionDaoImplTest.java</exclude>
+                        <exclude>**/PropiedadAplicacionDataLoaderImplTest.java</exclude>
+                        <exclude>**/PropiedadAplicacionServiceTest.java</exclude>
+                        -->
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- Starts SoapUi web service mockup for test phase -->
+            <plugin>                                                                                                                      
+                <groupId>eviware</groupId>                                                                                                
+                <artifactId>maven-soapui-plugin</artifactId>                                                                              
+                <version>4.5.1</version>                                                                                                  
+                <configuration>                                      
+                    <outputFolder>${basedir}/src/test/resources/soapui/output</outputFolder>
+                    <junitReport>true</junitReport>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>MfTurnosMockUp</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>mock</goal>
+                        </goals>
+                        <configuration>
+                            <projectFile>${basedir}/src/test/resources/soapui/MfTurnos.xml</projectFile>
+                            <mockService>MfTurnosMS</mockService> 
+                            <noBlock>true</noBlock>
+                            <settingsFile>${basedir}/src/test/resources/soapui/settings.xml</settingsFile>
+                        </configuration>
+							</execution>                                                                                                                                                                                                                 
+                </executions>                                                                                                             
+            </plugin>
+            <!-- Plugin constructor del sitio de proyecto -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <reportPlugins>
+                        <!-- Información del proyecto -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>${maven.project.info.reports.plugin}</version>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>                                        
+                                        <report>index</report>
+                                        <report>project-team</report>
+                                        <report>cim</report>
+                                        <report>scm</report>
+                                        <report>summary</report>
+                                        <report>dependencies</report>
+                                        <report>dependency-management</report>
+                                        <report>distribution-management</report>                                                                               
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                        <!-- Resultados de tests -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-report-plugin</artifactId>
+                            <version>${maven.surefire.report.plugin}</version>
+                            <!--configuration>
+                                <outputDirectory>${project.reporting.outputDirectory}/testresults</outputDirectory>
+                            </configuration-->
+                        </plugin>
+                        <!-- Javadoc -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>${maven.javadoc.plugin}</version>
+                            <configuration>
+                                <aggregate>true</aggregate>
+                            </configuration>
+                        </plugin>
+                        <!-- Chequeos de coding style -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <version>${maven.checkstyle.plugin}</version>
+                        </plugin>
+                        <!-- Referencias cruzadas -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jxr-plugin</artifactId>
+                            <version>${maven.jxr.plugin}</version>
+                            <configuration>
+                                <aggregate>true</aggregate>
+                            </configuration>
+                        </plugin>
+                        <!-- Analizador de código PMD -->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-pmd-plugin</artifactId>
+                            <version>${maven.pmd.plugin}</version>
+                            <configuration>
+                                <aggregate>true</aggregate>
+                                <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                                <!-- The minimum tokens before a violation -->
+                                <minimumTokens>100</minimumTokens>
+                                <!-- Turn off if no xref report -->
+                                <!--linkXRef>true</linkXRef-->
+                                <verbose>true</verbose>
+                                <targetJdk>${java.version}</targetJdk>
+                                <!--rulesets>
+                                    <ruleset>/rulesets/maven.xml</ruleset>
+                                    <ruleset>/rulesets/migrating_to_junit4.xml</ruleset>
+                                    <ruleset>/rulesets/design.xml</ruleset>
+                                    <ruleset>/rulesets/unusedcode.xml</ruleset>
+                                    <ruleset>/rulesets/typeresolution.xml</ruleset>
+                                </rulesets-->
+                            </configuration>
+                        </plugin>
+                        <!-- Detecta patrones de código que denotan errores. Falsos positivos < 50% -->
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>findbugs-maven-plugin</artifactId>
+                            <version>${maven.findbugs.plugin}</version>
+                        </plugin>
+                        <!-- Reporta artefactos con versiones disponibles más nuevas -->
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>versions-maven-plugin</artifactId>
+                            <version>${maven.versions.plugin}</version>
+                        </plugin>
+                        <!-- Lista los tags, ie TODO: -->
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>taglist-maven-plugin</artifactId>
+                            <version>${maven.taglist.plugin}</version>
+                            <configuration>
+                                <aggregate>true</aggregate>
+                            </configuration>
+                        </plugin>
+                        <!-- Reporte de la cobertura de código de los tests. -->
+                        <plugin>
+                            <groupId>org.jacoco</groupId>
+                            <artifactId>jacoco-maven-plugin</artifactId>
+                            <configuration>
+                                <excludes>
+                                    <exclude>ar/org/hiba/discomun/areajerarquica/exception/**/*.class</exclude>
+                                    <exclude>ar/org/hiba/discomun/areajerarquica/entity/dto/**/*.class</exclude>
+                                </excludes>
+                            </configuration>
+                        </plugin>
+                    </reportPlugins>
+                    <locales>en</locales>
+                </configuration>
+            </plugin>
+            <!-- Medida de la cobertura de código de los tests. -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${maven.jacoco.plugin}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>CLASS</element>
+                                    <excludes>
+                                        <exclude>*Exception</exclude>
+                                        <exclude>ar.org.hiba.discomun.areajerarquica.entity.dto.*</exclude>
+                                    </excludes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.00</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+        </plugins>
+    </build>
+    
+    <!-- Definición del perfil de test de integración -->
+    <profiles>
+        <profile>
+            <id>integracion-test</id>
+            <build>
+                <plugins>
+                    <!-- Configuración de tests de integración -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>2.13</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        
+        <!-- Profile 'release-hi' para release heredado del POM Base -->
+        
+    </profiles>
+
+</project>
